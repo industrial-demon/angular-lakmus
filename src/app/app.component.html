@@ -1,0 +1,78 @@
+<div class="p-32">
+  <form
+    [formGroup]="diagnosisForm"
+    (ngSubmit)="onSubmit()"
+    class="w-[500px] bg-slate-200 flex flex-col rounded-md p-4 gap-4"
+  >
+    <div class="flex items-center gap-2" formGroupName="encounter">
+      <h3 class="text-xl font-medium">Дата:</h3>
+
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="date"
+          (dateChange)="onDateChange()"
+        />
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-hint
+          *ngIf="diagnosisForm.get('encounter.date')?.errors?.['invalidDate'] && diagnosisForm.get('encounter.date')?.touched"
+          class="text-red-600 whitespace-nowrap !-ml-6 !text-left"
+        >
+          Помилка: дата не може бути в минулму часі
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div
+      (click)="onAddDiagnos()"
+      class="flex gap-2 text-blue-600 cursor-pointer"
+    >
+      <mat-icon>add</mat-icon>
+      <span>додати ще</span>
+    </div>
+
+    <div formArrayName="conditions" class="flex flex-col gap-1">
+      <ng-container
+        *ngFor="let diagnosControl of conditions.controls; let i = index"
+      >
+        <div [formGroupName]="i" class="flex w-full gap-2">
+          <ng-container formGroupName="context">
+            <ng-container formGroupName="identifier">
+              <diagnos-autocomplete
+                [index]="i"
+                [parentFormGroup]="diagnosisForm"
+              ></diagnos-autocomplete>
+            </ng-container>
+          </ng-container>
+          <mat-form-field class="w-full">
+            <mat-label>коментар</mat-label>
+            <input matInput formControlName="notes" />
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+
+    <button mat-stroked-button class="!bg-green-700 !text-white w-full">
+      Cформувати JSON
+    </button>
+
+    <div>
+      <h3 class="text-base font-medium">JSON:</h3>
+      <mat-form-field class="w-full">
+        <mat-label>Result</mat-label>
+        <textarea
+          [value]="result"
+          matInput
+          rows="5"
+          [ariaSetSize]="false"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

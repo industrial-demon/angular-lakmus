@@ -1,0 +1,22 @@
+<ng-container>
+  <mat-form-field class="w-full">
+    <mat-label>Диагноз</mat-label>
+    <input
+      type="text"
+      placeholder="search diagnos"
+      matInput
+      debounceInput
+      (onEvent)="onSearch($event)"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option
+        *ngFor="let option of filteredOptions$ | async"
+        [value]="option"
+        (onSelectionChange)="onSelectedOption(option)"
+      >
+        {{ option.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>
